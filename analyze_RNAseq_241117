@@ -2,7 +2,7 @@
 
 ################################################
 # PROGRAM:
-# analyze_RNAseq_231126.sh
+# analyze_RNAseq_241117.sh
 #
 # DESCRIPTION:
 # This is a very basic RNA-seq pipeline that I use for analyzing fastq reads. Step1 is a
@@ -15,7 +15,7 @@
 # <yournamehere>
 #
 # START DATE:
-# November 26, 2023
+# November 17,2024
 #
 # DEPENDENCIES:
 # 	Requires the installation of the follwing software: 
@@ -83,7 +83,7 @@ gtffile="<annotation.gtf>"
 #This is the output_directory:
 DATE=`date +%Y-%m-%d`
 #OR
-#DATE='2022-12-03'
+#DATE='2024-12-03'
 
 outputdir="../03_output/"$DATE"_output/"
 
