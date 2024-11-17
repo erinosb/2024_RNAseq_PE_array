@@ -3,11 +3,6 @@ DSCI512: 2024: Course pipeline with quality control, alignment, tabulation, and 
 
 -----
 
-# 2023_RNAseq_pairedend
-DSCI512: 2023: pipeline with quality control, alignment, tabulation, and format conversion for paired-end, short read RNA-seq projects
-
------
-
 
 *DSCI512 - RNA sequencing data analysis - course scripts*
 
