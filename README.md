@@ -40,8 +40,8 @@ Notice that instead of having a single script, you now have a few scripts. These
 Let's copy the two scripts up one directory. This will create duplicate copies for you to edit on and will move the scripts directly into ''02_scripts'', not its sub-directory.
 
 ```bash
-$ cd 2023_RNAseq_pairedend
-$ cp analyze_RNAseq_231126.sh ..
+$ cd 2024_RNAseq_PE_array
+$ cp analyze_RNAseq_241117.sh ..
 $ cp execute_RNAseq_pipeline.sbatch ..
 $ cd ..
 ```
@@ -53,7 +53,7 @@ $ cd ..
 The **analyze_RNAseq_231126.sh** script contains our pipeline. 
 
 Let's briefly peek into it and see that it contains. 
-  * Open **analyze_RNAseq_231126.sh** in an editor window. You'll notice the following sections.
+  * Open **analyze_RNAseq_241117.sh** in an editor window. You'll notice the following sections.
 
 **The pipeline**
   * A shebang
@@ -67,7 +67,7 @@ Let's briefly peek into it and see that it contains.
 The way this script works, we (as the user) modify the MODIFY THIS SECTION part, then when we run the script, we give it a metadata file as its first argument. We can execute the analyzer script like so...
 
 ```bash
-$ bash RNAseq_analyzer_231126.sh ../01_input/metadatafile.txt
+$ bash RNAseq_analyzer_231117.sh ../01_input/metadatafile.txt
 ```
 
 This will take a metadata file as input and loop over the content within that metadata file. It will pull the names of the .fastq file names to process from the first and second column of the metadata file and start processing them one at a time. It will name them by the 'short nickname' in the third column.
@@ -99,11 +99,11 @@ Let's open **execute_RNAseq_pipeline.sbatch** in an editor window and explore ho
 
 #SBATCH --job-name=RNAseq_pipeline 
 #SBATCH --nodes=1                          # this script is designed to run on one node
-#SBATCH --ntasks=12                        # modify this number to reflect how many cores you want to use (up to 24)
-#SBATCH --time=04:00:00                    # modify this number to reflect how much time to request
+#SBATCH --ntasks=2                       # modify this number to reflect how many cores you want to use (up to 24)
+#SBATCH --time=00:10:00                    # modify this number to reflect how much time to request
 #SBATCH --partition=amilan                 # modify this to reflect which queue you want to use.
 #SBATCH --mail-type=END                    # Keep these two lines of code if you want an e-mail sent to you when it is complete.
-#SBATCH --mail-user=<youremail>            # add your e-mail here
+#SBATCH --mail-user=<youremail>             # add your e-mail here
 #SBATCH --output=log-RNAseqpipe-%j.out     # this will capture all output in a logfile with %j as the job #
 
 ######### Instructions ###########
@@ -111,16 +111,19 @@ Let's open **execute_RNAseq_pipeline.sbatch** in an editor window and explore ho
 # Modify your SLURM entries above to fit your choices
 # Below, modify the SECOND argument to point to YOUR metadata.file
 # Below, you don't need to change $SLURM_NTASKS. It will automatically populate whatever you put in --ntasks=# above.
-# Execute this script using $ sbatch execute_RNAseq_pipeline.sbatch
+# Execute this script using $ sbatch --array=0-17 execute_RNAseq_pipeline.sbatch 
+#   where n = number of paired-end samples to process. 
 
+# Get the ARRAY#
+num=$(( ${SLURM_ARRAY_TASK_ID} + 1 ))
 
+# Get the metadata line of information associated with this ARRAY#
+line=$( sed -ne "${num}p" ../01_intput/metadata_gomezOrte.txt )
+
+echo $line
 
 ## Execute the RNA-seq_pipeline to run the pipeline
-bash analyze_RNAseq_231126.sh <metadatafile>  $SLURM_NTASKS
-
-
-## Execute the cleanup script to zip .fastq files and delete extra files
-#bash RNAseq_cleanup_231126.sh <metadatafile> 
+bash analyze_RNAseq_241117.sh $SLURM_NTASKS $line 
 
 ```
 
@@ -131,7 +134,8 @@ bash analyze_RNAseq_231126.sh <metadatafile>  $SLURM_NTASKS
   * Then, you will execute the script like so...
   
 ```bash
-$ sbatch execute_RNAseq_pipeline.sbatch
+
+$ sbatch --array=0-17 execute_RNAseq_pipeline.sbatch
 ```
 
 ----
@@ -155,7 +159,7 @@ Let's try this out. Follow along to test the scripts. Here's the plan...
 
 ### 1. Ensure you have some fastq files in your 01_input folder
 
-Let's make sure you have .fastq files. These are files we made last time by subsetting the larger files. For more instructions on this process --> [Data Acquisition](https://rna.colostate.edu/2022/doku.php?id=wiki:dataacquisition)
+Let's make sure you have .fastq files. These are files we made last time by subsetting the larger files. For more instructions on this process --> [Data Acquisition](https://rna.colostate.edu/2024/doku.php?id=wiki:dataacquisition)
  
 ```bash
 # Navigate to the input directory (using cd ../01_input)
@@ -168,7 +172,7 @@ $ ls
  
 ### 2. Create a metadata file
  
-Within your 01_input directory, make sure you have a metadata file. For more instructions on this process --> [Automation I](https://rna.colostate.edu/2023/doku.php?id=wiki:automation)
+Within your 01_input directory, make sure you have a metadata file. For more instructions on this process --> [Automation I](https://rna.colostate.edu/2024/doku.php?id=wiki:automation)
  
 ### 3. Gather the genome files you'll need
 
@@ -176,7 +180,7 @@ Within your 01_input directory, make sure you have a metadata file. For more ins
    - Build an index out of your genome (.ht2 files)
    - Download (or obtain) an annotation file (.gtf or .gff)
 
-We'll work through these steps in the next section --> [Building Indexes](https://rna.colostate.edu/2023/doku.php?id=wiki:hisat2build)
+We'll work through these steps in the next section --> [Building Indexes](https://rna.colostate.edu/2024/doku.php?id=wiki:hisat2build)
 
 ### 4. Modify the **execute** script
 
@@ -196,28 +200,27 @@ We'll work through these steps in the next section --> [Building Indexes](https:
 ### 5. Modify the **analyzer** script
 
   - Awesome!
-  - Next, we'll modify the script **analyze_RNAseq_231126.sh**
-  - Open the **analyze_RNAseq_231126.sh** in a text editor window.
+  - Next, we'll modify the script **analyze_RNAseq_241117.sh**
+  - Open the **analyze_RNAseq_241117.sh** in a text editor window.
   - Within the MODIFY THIS SECTION part of the code, replace <yourinputdir> with a path to your input directory. 
   - Within the MODIFY THIS SECTION part of the code, replace <hisatpath/prefix> with the path to your hisat2 indexes and the prefix for your hisat2 indexes.
   - Mine ended up looking like:
 
 ```bash
  
+####### MODIFY THIS SECTION #############
+
 #The input samples live in directory:
 inputdir="../01_input"
 
-#Metadata file. This pulls the metadata path and file from the command line
-metadata=$1
-
 #This is where the ht2 files live:
-hisat2path="../../PROJ02_ce11Build/ce11"
-    
+hisat2path="/pl/active/onishimura_lab/ERIN/COURSES/2024_testing/PROJ02_ce11IndexBuild/ce11"
+
 #This is where the genome sequence lives:
-genomefa="../../PROJ02_ce11Build/ce11_wholegenome.fa"
+genomefa="/pl/active/onishimura_lab/ERIN/COURSES/2024_testing/PROJ02_ce11IndexBuild/ce11_wholegenome.fa"
 
 #This is where the gtf file lives:
-gtffile="../01_input/ce11_annotation.gtf"
+gtffile="../01_input/ce11_annotation_ensembl_to_ucsc.gtf"
 
 ```
 
