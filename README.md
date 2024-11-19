@@ -12,6 +12,7 @@ Below is a tutorial on the use of these scripts:
 
 ----
 
+## TUESDAY - NOV 19 - just read, don't do anything! We will do this on Thursday!
 
 ## Let's download the script templates I've written on github.
 
