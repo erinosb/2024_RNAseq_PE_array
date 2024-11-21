@@ -275,7 +275,7 @@ I included a script that automates the process of compressing files and deleting
  - Modify the execute_RNAseq_pipeline.sbatch script to 1) comment out ~Line57, the one that runs the RNAseq_analyzer script, 2) remove the commenting from ~Line65 that runs the cleanup script, and 3) add the metadata path to ~Line26
  - It should now look like this:
    
-```
+```bash
 ######################################################
 ## Execute the RNA-seq_pipeline to run the pipeline ##
 ######################################################
