@@ -2,7 +2,7 @@
 
 #SBATCH --job-name=RNAseq_pipeline 
 #SBATCH --nodes=1                          # this script is designed to run on one node
-#SBATCH --ntasks=1                         # modify this number to reflect how many cores you want to use (up to 24)
+#SBATCH --ntasks=2                         # modify this number to reflect how many cores you want to use (up to 24)
 #SBATCH --time=00:15:00                    # modify this number to reflect how much time to request
 #SBATCH --partition=amilan                 # modify this to reflect which queue you want to use.
 #SBATCH --mail-type=END                    # Keep these two lines of code if you want an e-mail sent to you when it is complete.
@@ -30,7 +30,11 @@
 ##############################
 #      MODIFY THIS SECTION   #
 ##############################
-metadata=../01_input/metadata_gomezOrte.txt
+
+# Replace <metadata> to your metadata file including its relative or absolute path. Mine looks like this...
+# metadata=../01_input/metadata_gomezOrte.txt
+
+metadata=<yourmetadatafile.txt>
 
 
 ##############################
