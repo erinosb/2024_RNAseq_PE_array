@@ -22,13 +22,14 @@
 ########################
 
 #Select the proper date for the output file you'd like to merge:
-#day=`date +%Y-%m-%d`
+day=`date +%Y-%m-%d`
 #OR
-day='2024-11-20'
+#day='2024-11-20'
 
 
-# Select the metadata file
-metadata=../01_input/metadata_gomezOrte.txt
+# Select the metadata file. Replace <metadata.txt> with your metadata path and file. 
+# Mine looks like: metadata=../01_input/metadata_gomezOrte.txt
+metadata=<metadata.txt> 
 
 ########################
 # MERGE FILES
