@@ -156,8 +156,9 @@ Let's try this out. Follow along to test the scripts. Here's the plan...
    - Download (or obtain) an annotation file (.gtf or .gff)
 4. Modify the **execute** script
 5. Modify the **analyzer** script. Point it to the genome, index, .gtf, input folder, and .fastq files
-6. Run the scripts
-7. Clean up the project
+6. Run the script
+7. Merge the counts files
+8. Clean up the project
  
 ----
  
@@ -256,19 +257,39 @@ Did it work?
 
 ### 7. Clean up the project
 
+In the next step of our project, we will need the counts.txt files that are located in **03_feature** sub-directory. These are each separate. To merge them into a single file for download, we need to run a quick little merge script.
+
+  - Open the file **merge_counts_files.sh
+  - Modify the MODIFY THIS SECTION part to match A) the date of your your output folder and B) your metadata file.
+  - Run the script like so...
+
+```bash
+$ sh merge_counts_files.sh
+
+### 8. Clean up the project
+
 I included a script that automates the process of compressing files and deleting temp files. This is located in the same directory you cloned from github. To use this script:
 
  - Copy the cleanup script RNAseq_cleanup_241117.sh into the 02_scripts directory (move it one directory up).
  - Modify the “Modify this Section” part of the clean script.
- - Modify the execute_RNAseq_pipeline.sbatch script to 1) comment out ~Line22, the one that runs the RNAseq_analyzer script, 2) remove the commenting from ~Line26 that runs the cleanup script, and 3) add the metadata path to ~Line26
- - It should look like this:
+ - Modify the execute_RNAseq_pipeline.sbatch script to 1) comment out ~Line57, the one that runs the RNAseq_analyzer script, 2) remove the commenting from ~Line65 that runs the cleanup script, and 3) add the metadata path to ~Line26
+ - It should now look like this:
    
 ```
-## Execute the RNA-seq_pipeline to run the pipeline
-#bash RNAseq_analyzer_241117.sh $SLURM_NTASKS $line
+######################################################
+## Execute the RNA-seq_pipeline to run the pipeline ##
+######################################################
+
+# Execute this script to analyze samples in your metadata file
+bash analyze_RNAseq_241117.sh $SLURM_NTASKS $line 
+
+
+#############################
+# Optional Clean Up Script  #
+#############################
 
 ## Execute the cleanup script to zip .fastq files and delete extra files
-bash RNAseq_cleanup_221126.sh $line
+#bash cleanup_RNAseq_241117.sh $line 
 ```
 
 Again, run with:
