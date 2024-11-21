@@ -2,7 +2,7 @@
 
 #SBATCH --job-name=RNAseq_pipeline 
 #SBATCH --nodes=1                          # this script is designed to run on one node
-#SBATCH --ntasks=12                         # modify this number to reflect how many cores you want to use (up to 24)
+#SBATCH --ntasks=1                         # modify this number to reflect how many cores you want to use (up to 24)
 #SBATCH --time=00:15:00                    # modify this number to reflect how much time to request
 #SBATCH --partition=amilan                 # modify this to reflect which queue you want to use.
 #SBATCH --mail-type=END                    # Keep these two lines of code if you want an e-mail sent to you when it is complete.
@@ -40,7 +40,7 @@ echo $line
 ## Execute the RNA-seq_pipeline to run the pipeline ##
 ######################################################
 
-bash analyze_RNAseq_241119.sh $SLURM_NTASKS $line 
+#bash analyze_RNAseq_241117.sh $SLURM_NTASKS $line 
 
 
 #############################
@@ -48,4 +48,4 @@ bash analyze_RNAseq_241119.sh $SLURM_NTASKS $line
 #############################
 
 ## Execute the cleanup script to zip .fastq files and delete extra files
-#bash RNAseq_cleanup_241117.sh <metadatafile> 
+bash cleanup_RNAseq_241117.sh $line 
