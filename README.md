@@ -51,7 +51,7 @@ $ cd ..
 ## Let's explore the RNAseqAnalyzer Script 
 
 
-The **analyze_RNAseq_231126.sh** script contains our pipeline. 
+The **analyze_RNAseq_241117.sh** script contains our pipeline. 
 
 Let's briefly peek into it and see that it contains. 
   * Open **analyze_RNAseq_241117.sh** in an editor window. You'll notice the following sections.
@@ -68,7 +68,7 @@ Let's briefly peek into it and see that it contains.
 The way this script works, we (as the user) modify the MODIFY THIS SECTION part, then when we run the script, we give it a metadata file as its first argument. We can execute the analyzer script like so...
 
 ```bash
-$ bash RNAseq_analyzer_231117.sh ../01_input/metadatafile.txt
+$ bash analyze_RNAseq_241117.sh <ntasks> <file_1.fastq> <file_2.fastq> <nickname>
 ```
 
 This will take a metadata file as input and loop over the content within that metadata file. It will pull the names of the .fastq file names to process from the first and second column of the metadata file and start processing them one at a time. It will name them by the 'short nickname' in the third column.
@@ -91,6 +91,11 @@ To execute the bash script, we will do the following...
 $ sbatch execute_RNAseq_pipeline.sbatch
 ```
 
+However, because we can take advantage of arrays, we will use the following command in which you'll substitute 'n' with n being one less the number of samples you have.
+```bash
+$ sbatch --array=0-n execute_RNAseq_pipeline.sbatch
+```
+
 By doing this, the **execute** script will submit the **analyzer** script to **SLURM**. This will ensure the **analyzer** script is run at the proper time and with the requested resources on compute nodes on the ALPINE system. What is SLURM? Slurm is a job scheduling system for large and small Linux clusters. It puts your job into a 'queue'. When the resources you have requested are available, your job will begin. SLURM is organized so that different users have different levels of priority in the queue. On ALPINE, users who use fewer resources have higher priority. Power users have less priority and are encouraged to purchase greater access to the system if it is a problem.
 
 Let's open **execute_RNAseq_pipeline.sbatch** in an editor window and explore how it works. 
@@ -100,7 +105,7 @@ Let's open **execute_RNAseq_pipeline.sbatch** in an editor window and explore ho
 
 #SBATCH --job-name=RNAseq_pipeline 
 #SBATCH --nodes=1                          # this script is designed to run on one node
-#SBATCH --ntasks=2                       # modify this number to reflect how many cores you want to use (up to 24)
+#SBATCH --ntasks=2                         # modify this number to reflect how many cores you want to use (up to 24)
 #SBATCH --time=00:10:00                    # modify this number to reflect how much time to request
 #SBATCH --partition=amilan                 # modify this to reflect which queue you want to use.
 #SBATCH --mail-type=END                    # Keep these two lines of code if you want an e-mail sent to you when it is complete.
@@ -113,7 +118,7 @@ Let's open **execute_RNAseq_pipeline.sbatch** in an editor window and explore ho
 # Below, modify the SECOND argument to point to YOUR metadata.file
 # Below, you don't need to change $SLURM_NTASKS. It will automatically populate whatever you put in --ntasks=# above.
 # Execute this script using $ sbatch --array=0-17 execute_RNAseq_pipeline.sbatch 
-#   where n = number of paired-end samples to process. 
+#   where 17 here is one less than the number of paired-end samples we have to process, which is 18. 
 
 # Get the ARRAY#
 num=$(( ${SLURM_ARRAY_TASK_ID} + 1 ))
@@ -129,9 +134,9 @@ bash analyze_RNAseq_241117.sh $SLURM_NTASKS $line
 ```
 
   * This script is going to request 2 ntasks (threads) on 1 node. NOTE - never split a node. 
-  * Notice that this script only has 1 line of code that will execute. The second bash line is commented out for now. 
+  * Notice that this script only has 1 bash line of code that will execute. The second bash line is commented out for now. 
   * The way you will use this script is by modifying the SLURM prepended commands to fit how you want the job to run.
-  * Next, you will add in your <metadatafile> information. Mine will be ../01_input/tester_metadatafile.txt
+  * Next, you will add in your <metadatafile> information. Mine will be ../01_input/metadata_GomezOrte.txt
   * Then, you will execute the script like so...
   
 ```bash
@@ -259,16 +264,16 @@ I included a script that automates the process of compressing files and deleting
    
 ```
 ## Execute the RNA-seq_pipeline to run the pipeline
-#bash RNAseq_analyzer_231126.sh ../01_input/test_metadata.txt  $SLURM_NTASKS
+#bash RNAseq_analyzer_241117.sh $SLURM_NTASKS $line
 
 ## Execute the cleanup script to zip .fastq files and delete extra files
-bash RNAseq_cleanup_221126.sh ../01_input/test_metadata.txt
+bash RNAseq_cleanup_221126.sh $line
 ```
 
 Again, run with:
 
 ```
-$ sbatch execute_RNAseq_pipeline.sbatch
+$ sbatch --array=0-17 execute_RNAseq_pipeline.sbatch
 ```
 
 
