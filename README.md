@@ -195,18 +195,21 @@ We'll work through these steps in the next section --> [Building Indexes](https:
   - Navigate to the scripts directory in your file structure navigation panel.
   - Open the **execute_RNAseq_pipeline.sbatch** script in a text editor window.
   - Add your e-mail if you'd like to receive e-mail updates when your job completes
-  - Most importantly, replace <metadatafile> with a path to your tester metadata file. 
+  - Most importantly, replace <metadatafile> with a path to your metadata file. 
   - Mine looks like:
 
 ```bash
- bash analyze_RNAseq_231126.sh ../01_input/metadata_gomezOrte.txt  $SLURM_NTASKS
+metadata=../01_input/metadata_gomezOrte.txt
 ```
+
+  - Ensure you have the analyzer script set to run and the cleanup script off. You should see a pound sign in front of the cleanup script line. 
  
 ### 5. Modify the **analyzer** script
 
   - Awesome!
   - Next, we'll modify the script **analyze_RNAseq_241117.sh**
   - Open the **analyze_RNAseq_241117.sh** in a text editor window.
+  - NOTE! Most of the paths you need, we have already prepared. they are in a file called **paths.txt** in your **PROJ02_ce11IndexBuild** folder. Open that and copy and paste them in.
   - Within the MODIFY THIS SECTION part of the code, replace <yourinputdir> with a path to your input directory. 
   - Within the MODIFY THIS SECTION part of the code, replace <hisatpath/prefix> with the path to your hisat2 indexes and the prefix for your hisat2 indexes.
   - Mine ended up looking like:
@@ -219,13 +222,13 @@ We'll work through these steps in the next section --> [Building Indexes](https:
 inputdir="../01_input"
 
 #This is where the ht2 files live:
-hisat2path="/pl/active/onishimura_lab/ERIN/COURSES/2024_testing/PROJ02_ce11IndexBuild/ce11"
+hisat2path="/scratch/alpine/erinnish@colostate.edu/DSCI512/PROJ02_ce11IndexBuild/ce11"
 
 #This is where the genome sequence lives:
-genomefa="/pl/active/onishimura_lab/ERIN/COURSES/2024_testing/PROJ02_ce11IndexBuild/ce11_wholegenome.fa"
+genomefa="/scratch/alpine/erinnish@colostate.edu/DSCI512/PROJ02_ce11IndexBuild/ce11_wholegenome.fa"
 
 #This is where the gtf file lives:
-gtffile="../01_input/ce11_annotation_ensembl_to_ucsc.gtf"
+gtffile="/scratch/alpine/erinnish@colostate.edu/DSCI512/PROJ02_ce11IndexBuild/ce11_annotation_ensembl_to_ucsc.gtf"
 
 ```
 
@@ -234,13 +237,13 @@ gtffile="../01_input/ce11_annotation_ensembl_to_ucsc.gtf"
    - Simply run the scripts by executing:
 
 ```bash
-$ sbatch execute_RNAseq_pipeline.sbatch
+$ sbatch array=0-17 execute_RNAseq_pipeline.sbatch
 ```
  
    - Check on your script using:
 
 ```bash
-$ scheck
+$ squeue -u $USER
 $ more <logfile>
 $ tail <logfile>
 ```
@@ -250,13 +253,12 @@ Did it work?
   - If it worked, you should have a directory in your output file labeled with today's date.
   - Within that output directory, you should have folders for different steps of the pipeline `01_fastp`, `02_hisat2`, etc. 
   - Within the first two sub-directories, you should have files corresponding to samples EG01 and EG02. 
-  - The code will likely have only progressed as far as the hisat2 step.
 
 ### 7. Clean up the project
 
 I included a script that automates the process of compressing files and deleting temp files. This is located in the same directory you cloned from github. To use this script:
 
- - Copy the cleanup script RNAseq_cleanup_231126.sh into the 02_scripts directory (move it one directory up).
+ - Copy the cleanup script RNAseq_cleanup_241117.sh into the 02_scripts directory (move it one directory up).
  - Modify the “Modify this Section” part of the clean script.
  - Modify the execute_RNAseq_pipeline.sbatch script to 1) comment out ~Line22, the one that runs the RNAseq_analyzer script, 2) remove the commenting from ~Line26 that runs the cleanup script, and 3) add the metadata path to ~Line26
  - It should look like this:
