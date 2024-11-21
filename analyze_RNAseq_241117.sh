@@ -64,17 +64,28 @@
 
 ####### MODIFY THIS SECTION #############
 
-#The input samples live in directory:
-inputdir="../01_input"
+# The input samples live in directory. Replace <inputDir> with the name of your 
+# input directory (no trailing backslash)
+# Mine looks like: inputdir="../01_input"
+inputdir="<inputDir>"
 
-#This is where the ht2 files live:
-hisat2path="/pl/active/onishimura_lab/ERIN/COURSES/2024_testing/PROJ02_ce11IndexBuild/ce11"
+# This is where the ht2 files live. Replace this with the path to your index build 
+# directory followed by the prefix for your build. 
+# No .ht2 file extensions!!!
+# Mine looks like: hisat2path="/pl/active/onishimura_lab/ERIN/COURSES/2024_testing/PROJ02_ce11IndexBuild/ce11"
+hisat2path="<hisatpath/previx>"
 
-#This is where the genome sequence lives:
-genomefa="/pl/active/onishimura_lab/ERIN/COURSES/2024_testing/PROJ02_ce11IndexBuild/ce11_wholegenome.fa"
+# This is where the genome sequence lives. Replace <genome.fa> with the path and 
+# file of your whole genome sequence file. 
+# Mine looks like: genomefa="/pl/active/onishimura_lab/ERIN/COURSES/2024_testing/PROJ02_ce11IndexBuild/ce11_wholegenome.fa"
+genomefa="<genome.fa>"
 
-#This is where the gtf file lives:
-gtffile="../01_input/ce11_annotation_ensembl_to_ucsc.gtf"
+
+# This is where the gtf file lives. Replace <annotation.gtf with the path and file
+# of your annotation file. Mine looks like:
+# Mine looks like: gtffile="../01_input/ce11_annotation_ensembl_to_ucsc.gtf"
+gtffile="<annotation.gtf>"
+
 
 ##This is the output_directory:
 DATE=`date +%Y-%m-%d`
@@ -83,29 +94,11 @@ DATE=`date +%Y-%m-%d`
 
 outputdir="../03_output/"$DATE"_output/"
 
-##The input samples live in directory:
-#inputdir="<yourinputdir>"
-
-##This is where the ht2 files live:
-#hisat2path="<hisatpath/previx>"
-
-##This is where the genome sequence lives:
-#genomefa="<genome.fa>"
-
-##This is where the gtf file lives:
-#gtffile="<annotation.gtf>"
-
-##This is the output_directory:
-#DATE=`date +%Y-%m-%d`
-##OR
-##DATE='2024-12-03'
-
-#outputdir="../03_output/"$DATE"_output/"
 
 ########## DONE MODIFYING ###############
 
 
-####### OBTAIN ARGUMENTS & META DATA #############
+####### METADATA: OBTAIN ARGUMENTS & META DATA #############
 
 #Number of threads to use:
 #p-thread & Metadata info. This pulls the number of ntasks and the metadata from the command line
