@@ -28,10 +28,13 @@ echo -e ">>> INITIATING cleanup with command:\n\t$0 $@"
 
 ####### MODIFY THIS SECTION #############
 
-#The input samples (metadata file and _fastq.gz files) live in directory:
-inputdir="../01_input"
+# The input samples (metadata file and _fastq.gz files) live in directory:
+# Replace <intputDir> with your input directory
+# Mine looked like: inputdir="../01_input"
+inputdir="<inputDir>"
 
-#This is the output_directory:
+# This is the output_directory. Look at the date of the output file you'd like cleanup
+# modify this section to reflect that date
 DATE=`date +%Y-%m-%d`
 #OR
 #DATE=2022-12-03
