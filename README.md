@@ -238,7 +238,7 @@ gtffile="/scratch/alpine/erinnish@colostate.edu/DSCI512/PROJ02_ce11IndexBuild/ce
    - Simply run the scripts by executing:
 
 ```bash
-$ sbatch array=0-17 execute_RNAseq_pipeline.sbatch
+$ sbatch --array=0-17 execute_RNAseq_pipeline.sbatch
 ```
  
    - Check on your script using:
