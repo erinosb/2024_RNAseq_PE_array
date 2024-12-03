@@ -255,16 +255,18 @@ Did it work?
   - Within that output directory, you should have folders for different steps of the pipeline `01_fastp`, `02_hisat2`, etc. 
   - Within the first two sub-directories, you should have files corresponding to samples EG01 and EG02. 
 
-### 7. Clean up the project
+
+### 7. Merge the counts files
 
 In the next step of our project, we will need the counts.txt files that are located in **03_feature** sub-directory. These are each separate. To merge them into a single file for download, we need to run a quick little merge script.
 
   - Open the file **merge_counts_files.sh
-  - Modify the MODIFY THIS SECTION part to match A) the date of your your output folder and B) your metadata file.
+  - Modify the MODIFY THIS SECTION part to match A) the date of your output folder and B) your metadata file.
   - Run the script like so...
 
 ```bash
 $ sh merge_counts_files.sh
+```
 
 ### 8. Clean up the project
 
@@ -281,7 +283,7 @@ I included a script that automates the process of compressing files and deleting
 ######################################################
 
 # Execute this script to analyze samples in your metadata file
-bash analyze_RNAseq_241117.sh $SLURM_NTASKS $line 
+#bash analyze_RNAseq_241117.sh $SLURM_NTASKS $line 
 
 
 #############################
@@ -289,7 +291,7 @@ bash analyze_RNAseq_241117.sh $SLURM_NTASKS $line
 #############################
 
 ## Execute the cleanup script to zip .fastq files and delete extra files
-#bash cleanup_RNAseq_241117.sh $line 
+bash cleanup_RNAseq_241117.sh $line 
 ```
 
 Again, run with:
